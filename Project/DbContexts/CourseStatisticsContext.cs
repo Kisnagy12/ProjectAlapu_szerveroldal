@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Project.Entities;
 using Project.Entities.CourseStatistics;
 
 namespace Project.DbContexts
@@ -11,6 +12,7 @@ namespace Project.DbContexts
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<TeacherOnCourse> TeachersOnCourses { get; set; }
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
 
         public CourseStatisticsContext(DbContextOptions<CourseStatisticsContext> options) : base(options)
         {
@@ -66,6 +68,9 @@ namespace Project.DbContexts
             modelBuilder.Entity<TeacherOnCourse>()
                 .HasIndex(t => new { t.CourseId, t.TeacherId })
                 .IsUnique();
+
+            modelBuilder.Entity<ApplicationUser>()
+                .HasKey(x => x.Id);
         }
     }
 }
