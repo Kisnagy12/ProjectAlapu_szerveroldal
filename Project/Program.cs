@@ -66,10 +66,14 @@ builder.Services.AddScoped<IImportService, ImportService>();
 
 builder.Services.AddDbContext<CourseStatisticsContext>(optionsBuilder =>
 {
-    optionsBuilder.UseSqlServer("Server=(local);Database=Test;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true");
+    //optionsBuilder.UseSqlServer("Server=(local);Database=Test;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true");
+    optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
 });
 
 var app = builder.Build();
+
+// for testing
+app.MapGet("/", () => "Hello World!");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
