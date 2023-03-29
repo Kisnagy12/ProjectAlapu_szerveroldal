@@ -19,9 +19,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: AllowedOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("http://example.com"
-                                              //TODO: rendes URL-eket megadni
-                                              )
+                          policy.AllowAnyOrigin()
                           .AllowAnyHeader()
                           .AllowAnyMethod();
                       });
