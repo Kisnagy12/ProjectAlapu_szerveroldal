@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using Project.Services;
 
 namespace Project.Controllers
@@ -15,6 +16,7 @@ namespace Project.Controllers
         }
 
         [HttpPost]
+        [EnableCors]
         public IActionResult ImportCourseStatisticsExcelFile(IFormFile file)
         {
             if(!IsValidExcelFile(file))
@@ -28,6 +30,7 @@ namespace Project.Controllers
         }
         
         [HttpPost]
+        [EnableCors]
         public IActionResult ImportSurvivalAnalysisExcelFile(IFormFile file)
         {
             if (!IsValidExcelFile(file))

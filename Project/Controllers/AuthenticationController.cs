@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -39,6 +40,7 @@ namespace Project.Controllers
         /// <exception cref="ApplicationException"></exception>
         [AllowAnonymous]
         [HttpPost]
+        [EnableCors]
         public async Task<IActionResult> RegisterUser([FromBody] UserRegistrationDTO userForRegistration)
         {
             if (_userManager.Users.Any(u => u.UserName == userForRegistration.Username || u.Email == userForRegistration.Email))
@@ -61,6 +63,7 @@ namespace Project.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost]
+        [EnableCors]
         public async Task<IActionResult> Login([FromBody] UserLoginDTO userLoginDTO)
         {
             var user = await _userManager.FindByNameAsync(userLoginDTO.Username);
@@ -106,6 +109,7 @@ namespace Project.Controllers
         }
 
         [HttpPost]
+        [EnableCors]
         public async Task Logout()
         {
             await _signInManager.SignOutAsync();
