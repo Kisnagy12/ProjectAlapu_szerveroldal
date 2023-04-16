@@ -76,6 +76,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddScoped<IImportService, ImportService>();
+builder.Services.AddScoped<ICourseStatisticsService, CourseStatisticsService>();
 
 builder.Services.AddDbContext<CourseStatisticsContext>(optionsBuilder =>
 {
