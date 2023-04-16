@@ -4,7 +4,7 @@ namespace Project.Services
 {
     public interface IImportService
     {
-        public void ProcessCourseStatisticsExcelFile(IFormFile file);
-        public void ProcessSurvivalAnalysisExcelFile(IFormFile file);
+        public Task ProcessCourseStatisticsExcelFile(IFormFile file);
+        public Task ProcessSurvivalAnalysisExcelFile(IFormFile file);
     }
 }

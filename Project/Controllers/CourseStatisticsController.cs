@@ -16,9 +16,9 @@ namespace Project.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetCourseStatistics(CourseStatisticsFilterDto filter)
+        public async Task<IActionResult> GetCourseStatistics(CourseStatisticsFilterDto filter)
         {
-            var result = _courseStatisticsService.GetCourseStatistics(filter.SemesterNames, filter.SubjectCodes, filter.SubjectNames, filter.TeacherNames);
+            var result = await _courseStatisticsService.GetCourseStatistics(filter.SemesterNames, filter.SubjectCodes, filter.SubjectNames, filter.TeacherNames);
             return Ok(result);
         }
     }

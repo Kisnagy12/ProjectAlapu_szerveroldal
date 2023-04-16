@@ -17,28 +17,28 @@ namespace Project.Controllers
 
         [HttpPost]
         [EnableCors]
-        public IActionResult ImportCourseStatisticsExcelFile(IFormFile file)
+        public async Task<IActionResult> ImportCourseStatisticsExcelFile(IFormFile file)
         {
             if(!IsValidExcelFile(file))
             {
                 return BadRequest("Not valid excel file.");
             }
 
-            _importService.ProcessCourseStatisticsExcelFile(file);
+            await _importService.ProcessCourseStatisticsExcelFile(file);
 
             return Ok();
         }
         
         [HttpPost]
         [EnableCors]
-        public IActionResult ImportSurvivalAnalysisExcelFile(IFormFile file)
+        public async Task<IActionResult> ImportSurvivalAnalysisExcelFile(IFormFile file)
         {
             if (!IsValidExcelFile(file))
             {
                 return BadRequest("Not valid excel file.");
             }
 
-            _importService.ProcessSurvivalAnalysisExcelFile(file);
+            await _importService.ProcessSurvivalAnalysisExcelFile(file);
 
             return Ok();
         }

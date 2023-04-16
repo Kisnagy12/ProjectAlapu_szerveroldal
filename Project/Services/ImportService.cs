@@ -15,16 +15,16 @@ namespace Project.Services
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
         }
 
-        public void ProcessCourseStatisticsExcelFile(IFormFile file)
+        public async Task ProcessCourseStatisticsExcelFile(IFormFile file)
         {
             using (var fileStream = file.OpenReadStream())
             {
                 var data = ReadExcelFile(fileStream);
-                UploadData(data);
+                await UploadData(data);
             }
         }
 
-        public void ProcessSurvivalAnalysisExcelFile(IFormFile file)
+        public async Task ProcessSurvivalAnalysisExcelFile(IFormFile file)
         {
             throw new NotImplementedException();
         }
@@ -45,7 +45,7 @@ namespace Project.Services
             }
         }
 
-        private void UploadData(DataTable data)
+        private async Task UploadData(DataTable data)
         {
             var students = new List<Student>();
             var teachers = new List<Teacher>();

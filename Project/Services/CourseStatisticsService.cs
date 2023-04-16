@@ -13,7 +13,7 @@ namespace Project.Services
             _courseStatisticsContext = courseStatisticsContext;
         }
 
-        public IEnumerable<CourseStatisticsDto> GetCourseStatistics(
+        public async Task<IEnumerable<CourseStatisticsDto>> GetCourseStatistics(
             List<string> semesterNames,
             List<string> subjectCodes,
             List<string> subjectNames, 
