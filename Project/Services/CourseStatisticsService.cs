@@ -1,4 +1,5 @@
-﻿using Project.DataTransferObjects;
+﻿using Microsoft.EntityFrameworkCore;
+using Project.DataTransferObjects;
 using Project.DbContexts;
 using Project.Entities.CourseStatistics;
 
@@ -19,7 +20,7 @@ namespace Project.Services
             List<string> subjectNames, 
             List<string> teacherNames)
         {
-            var result = (from Course in _courseStatisticsContext.Courses
+            var result = await (from Course in _courseStatisticsContext.Courses
                          join Subject in _courseStatisticsContext.Subjects on Course.SubjectId equals Subject.Id
                          join TeacherOnCourse in _courseStatisticsContext.TeachersOnCourses on Course.Id equals TeacherOnCourse.CourseId
                          join StudentOnCourse in _courseStatisticsContext.StudentsOnCourses on Course.Id equals StudentOnCourse.CourseId
@@ -44,7 +45,7 @@ namespace Project.Services
                              NumberOfSignature = grp.Count(s => s.StudentOnCourse.DateOfSignature != null),
                              NumberOfSignatureRefusal = grp.Count(s => s.StudentOnCourse.DateOfSignatureRefusal != null),
                              NumberOfCompleted = grp.Count(s => s.StudentOnCourse.Completed == true)
-                         }).ToList();
+                         }).ToListAsync();
 
             return result;
         }
