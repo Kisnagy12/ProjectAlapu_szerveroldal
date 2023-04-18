@@ -49,5 +49,23 @@ namespace Project.Services
 
             return result;
         }
+
+        public async Task<CourseStatisticsFilterDto> GetFilters()
+        {
+            var semesterNames = await _courseStatisticsContext.Courses.Select(c => c.Semester).Distinct().ToListAsync();
+            var subjectCodes = await _courseStatisticsContext.Subjects.Select(s => s.Code).Distinct().ToListAsync();
+            var subjectNames = await _courseStatisticsContext.Subjects.Select(s => s.Name).Distinct().ToListAsync();
+            var teacherNames = await _courseStatisticsContext.Teachers.Select(t => t.Name).Distinct().ToListAsync();
+
+            var courseStatisticsFilterDto = new CourseStatisticsFilterDto()
+            {
+                SemesterNames = semesterNames,
+                SubjectCodes = subjectCodes,
+                SubjectNames = subjectNames,
+                TeacherNames = teacherNames
+            };
+
+            return courseStatisticsFilterDto;
+        }
     }
 }

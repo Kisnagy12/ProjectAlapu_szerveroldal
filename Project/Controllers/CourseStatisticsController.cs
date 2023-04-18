@@ -21,5 +21,12 @@ namespace Project.Controllers
             var result = await _courseStatisticsService.GetCourseStatistics(filter.SemesterNames, filter.SubjectCodes, filter.SubjectNames, filter.TeacherNames);
             return Ok(result);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetFilters()
+        {
+            var result = await _courseStatisticsService.GetFilters();
+            return Ok(result);
+        }
     }
 }
