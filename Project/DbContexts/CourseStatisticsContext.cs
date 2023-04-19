@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Project.Entities;
 using Project.Entities.CourseStatistics;
 
@@ -13,6 +15,8 @@ namespace Project.DbContexts
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<TeacherOnCourse> TeachersOnCourses { get; set; }
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<IdentityRole> IdentityRole { get; set; }
+        public DbSet<IdentityUserRole> IdentityUserRole { get; set; }
 
         public CourseStatisticsContext(DbContextOptions<CourseStatisticsContext> options) : base(options)
         {
@@ -70,6 +74,12 @@ namespace Project.DbContexts
                 .IsUnique();
 
             modelBuilder.Entity<ApplicationUser>()
+                .HasKey(x => x.Id);
+
+            modelBuilder.Entity<IdentityRole>()
+                .HasKey(x=>x.Id);
+
+            modelBuilder.Entity<IdentityUserRole>()
                 .HasKey(x => x.Id);
         }
     }

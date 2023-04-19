@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Project.DbContexts;
 
@@ -11,9 +12,11 @@ using Project.DbContexts;
 namespace Project.Migrations
 {
     [DbContext(typeof(CourseStatisticsContext))]
-    partial class CourseStatisticsContextModelSnapshot : ModelSnapshot
+    [Migration("20230418202408_identityRole")]
+    partial class identityRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,6 +42,22 @@ namespace Project.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("IdentityRole");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "7caaa9c2-068c-4a42-8f96-79dac866f7f4",
+                            ConcurrencyStamp = "73d1a299-4540-4296-8a9b-debc0f3b6ffe",
+                            Name = "user",
+                            NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = "8ff2a9f2-5738-4097-80a3-6e364161263d",
+                            ConcurrencyStamp = "415009c2-61df-4c07-830b-804af8ec5f2e",
+                            Name = "admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Project.Entities.ApplicationUser", b =>
@@ -78,12 +97,6 @@ namespace Project.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("RefreshToken")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("RefreshTokenExpiryTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");

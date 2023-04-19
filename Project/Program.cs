@@ -29,7 +29,6 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
-    options.User.RequireUniqueEmail = true;
 }).AddEntityFrameworkStores<CourseStatisticsContext>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
@@ -77,6 +76,7 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddScoped<IImportService, ImportService>();
 builder.Services.AddScoped<ICourseStatisticsService, CourseStatisticsService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddDbContext<CourseStatisticsContext>(optionsBuilder =>
 {
