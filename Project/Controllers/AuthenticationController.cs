@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Azure;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Project.Entities;
 using Project.Services;
@@ -50,7 +52,7 @@ namespace Project.Controllers
         {
             if (_userManager.Users.Any(u => u.UserName == userForRegistration.Username))
             {
-                throw new ApplicationException("Username already exists!");
+                return BadRequest("Username already exists!");
             }
             var user = new ApplicationUser
             {
@@ -61,6 +63,30 @@ namespace Project.Controllers
             await _userService.AddUserToRole(user.Id,Roles.USER);
 
             return new JsonResult(user);
+        }
+
+        [HttpPost]
+        [EnableCors]
+        public async Task<IActionResult> AddUserToAdminRole(string username)
+        {           
+            var user= await _userManager.FindByNameAsync(username);
+
+            if (user != null)
+            {
+                await _userService.AddUserToRole(user.Id, Roles.ADMIN);
+                return Ok(new JsonResult(user));
+            }
+
+            return BadRequest("User not found");
+            
+        }
+
+        [HttpGet]
+        [EnableCors]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = await _userManager.Users.ToListAsync();
+            return new JsonResult(users);
         }
 
         /// <summary>
