@@ -57,6 +57,7 @@ namespace Project.Controllers
             var user = new ApplicationUser
             {
                 UserName = userForRegistration.Username,
+                Email=userForRegistration.Email,
             };
             var result = await _userManager.CreateAsync(user, userForRegistration.Password);
 
@@ -86,7 +87,7 @@ namespace Project.Controllers
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _userManager.Users.ToListAsync();
-            return new JsonResult(users);
+            return new JsonResult(users.Select(x => new {x.UserName,x.Email}));
         }
 
         /// <summary>
@@ -116,6 +117,12 @@ namespace Project.Controllers
                 }
 
                 var token = CreateToken(authClaims);
+                var refreshToken = GenerateRefreshToken();
+
+                _ = int.TryParse(_configuration["JWT:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
+
+                user.RefreshToken = refreshToken;
+                user.RefreshTokenExpiryTime = DateTime.Now.AddDays(refreshTokenValidityInDays);
 
                 return Ok(new
                 {
