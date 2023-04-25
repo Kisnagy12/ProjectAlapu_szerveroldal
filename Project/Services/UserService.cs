@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Project.DbContexts;
 using Project.Entities;
@@ -16,7 +15,7 @@ namespace Project.Services
         }
         public async Task<IActionResult> AddUserToRole(string userId, string roleName)
         {
-            var role=_courseStatisticsContext.IdentityRole.Where(x=>x.NormalizedName == roleName).FirstOrDefault();
+            var role = _courseStatisticsContext.IdentityRole.Where(x => x.NormalizedName == roleName).FirstOrDefault();
             var newUserRole = new IdentityUserRole
             {
                 Id = Guid.NewGuid().ToString(),

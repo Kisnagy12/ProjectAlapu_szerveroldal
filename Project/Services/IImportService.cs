@@ -1,6 +1,4 @@
-﻿using System.Data;
-
-namespace Project.Services
+﻿namespace Project.Services
 {
     public interface IImportService
     {

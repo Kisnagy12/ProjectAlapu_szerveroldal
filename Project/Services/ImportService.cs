@@ -81,7 +81,7 @@ namespace Project.Services
                     students.Add(student);
                 }
 
-                if(!teachers.Any(t => t.Name == teacherName))
+                if (!teachers.Any(t => t.Name == teacherName))
                 {
                     var teacher = new Teacher()
                     {
@@ -91,7 +91,7 @@ namespace Project.Services
                     teachers.Add(teacher);
                 }
 
-                if(!subjects.Any(s => s.Code == subjectCode))
+                if (!subjects.Any(s => s.Code == subjectCode))
                 {
                     var subject = new Subject()
                     {
@@ -120,9 +120,9 @@ namespace Project.Services
                     courses.Add(course);
                 }
 
-                if(!studentOnCourses.Any(s => 
-                    s.Student.NeptunCode == studentNeptunCode && 
-                    s.Course.Code == courseCode && 
+                if (!studentOnCourses.Any(s =>
+                    s.Student.NeptunCode == studentNeptunCode &&
+                    s.Course.Code == courseCode &&
                     s.Course.Subject.Code == subjectCode))
                 {
                     var student = students.First(s => s.NeptunCode == studentNeptunCode);
@@ -140,8 +140,8 @@ namespace Project.Services
                     studentOnCourses.Add(studentOnCourse);
                 }
 
-                if(!teacherOnCourses.Any(t => 
-                    t.Teacher.Name == teacherName && 
+                if (!teacherOnCourses.Any(t =>
+                    t.Teacher.Name == teacherName &&
                     t.Course.Code == courseCode &&
                     t.Course.Subject.Code == subjectCode))
                 {
@@ -171,27 +171,27 @@ namespace Project.Services
                 _courseStatisticsContext.Add(student);
             }
 
-            foreach(var teacher in teachers)
+            foreach (var teacher in teachers)
             {
                 _courseStatisticsContext.Add(teacher);
             }
 
-            foreach(var subject in subjects)
+            foreach (var subject in subjects)
             {
                 _courseStatisticsContext.Add(subject);
             }
 
-            foreach(var course in courses)
+            foreach (var course in courses)
             {
                 _courseStatisticsContext.Add(course);
             }
 
-            foreach(var studentOnCourse in studentOnCourses)
+            foreach (var studentOnCourse in studentOnCourses)
             {
                 _courseStatisticsContext.Add(studentOnCourse);
             }
 
-            foreach(var teacherOnCourse in teacherOnCourses)
+            foreach (var teacherOnCourse in teacherOnCourses)
             {
                 _courseStatisticsContext.Add(teacherOnCourse);
             }

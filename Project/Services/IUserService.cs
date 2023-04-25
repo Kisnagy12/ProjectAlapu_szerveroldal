@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Project.Entities;
 
 namespace Project.Services
 {

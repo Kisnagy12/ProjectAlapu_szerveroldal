@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Project.Entities;
 using Project.Entities.CourseStatistics;
@@ -77,7 +76,7 @@ namespace Project.DbContexts
                 .HasKey(x => x.Id);
 
             modelBuilder.Entity<IdentityRole>()
-                .HasKey(x=>x.Id);
+                .HasKey(x => x.Id);
 
             modelBuilder.Entity<IdentityUserRole>()
                 .HasKey(x => x.Id);

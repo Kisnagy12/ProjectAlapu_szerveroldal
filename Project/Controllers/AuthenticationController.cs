@@ -1,14 +1,13 @@
-﻿using Azure;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Project.Entities;
 using Project.Services;
+using Project.ViewModels;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -57,11 +56,11 @@ namespace Project.Controllers
             var user = new ApplicationUser
             {
                 UserName = userForRegistration.Username,
-                Email=userForRegistration.Email,
+                Email = userForRegistration.Email,
             };
             var result = await _userManager.CreateAsync(user, userForRegistration.Password);
 
-            await _userService.AddUserToRole(user.Id,Roles.USER);
+            await _userService.AddUserToRole(user.Id, Roles.USER);
 
             return new JsonResult(user);
         }
@@ -69,8 +68,8 @@ namespace Project.Controllers
         [HttpPost]
         [EnableCors]
         public async Task<IActionResult> AddUserToAdminRole(string username)
-        {           
-            var user= await _userManager.FindByNameAsync(username);
+        {
+            var user = await _userManager.FindByNameAsync(username);
 
             if (user != null)
             {
@@ -79,15 +78,48 @@ namespace Project.Controllers
             }
 
             return BadRequest("User not found");
-            
+
         }
 
         [HttpGet]
         [EnableCors]
         public async Task<IActionResult> GetAllUsers()
         {
-            var users = await _userManager.Users.ToListAsync();
-            return new JsonResult(users.Select(x => new {x.UserName,x.Email}));
+            List<UserViewModel> userList = new();
+            int num = 0;
+            int size = 100;
+
+            while (true)
+            {
+                var users = await _userManager.Users.Skip(num * size).Take(size).ToListAsync();
+                if (users.Count == 0)
+                {
+                    break;
+                }
+                foreach (var user in users)
+                {
+                    var userRoles = await _userManager.GetRolesAsync(user);
+                    if (userRoles != null)
+                    {
+                        userList.Add(new UserViewModel
+                        {
+                            UserName = user.UserName,
+                            Email = user.Email,
+                            UserRoles = userRoles,
+                        });
+                    }
+                    else
+                    {
+                        userList.Add(new UserViewModel
+                        {
+                            UserName = user.UserName,
+                            Email = user.Email,
+                        });
+                    }
+                }
+                num++;
+            }
+            return new JsonResult(userList);
         }
 
         /// <summary>
@@ -113,7 +145,7 @@ namespace Project.Controllers
 
                 foreach (var userRole in userRoles)
                 {
-                    authClaims.Add(new Claim(ClaimTypes.Role,userRole));
+                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
                 }
 
                 var token = CreateToken(authClaims);
@@ -185,7 +217,7 @@ namespace Project.Controllers
         {
             var principal = GetPrincipalFromExpiredToken(token);
             var user = new ApplicationUser();
-            if (principal != null) 
+            if (principal != null)
             {
                 user = await _userManager.FindByNameAsync(principal.Identity!.Name);
             }

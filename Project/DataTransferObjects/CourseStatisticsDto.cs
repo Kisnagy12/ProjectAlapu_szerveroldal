@@ -8,7 +8,7 @@
         public string CourseSemester { get; set; } //Szűrés
         public string CourseType { get; set; } //Pl. Elmélet gyakorlat
         public string CourseProgram { get; set; } //Pl. Levelező nappali
-        public string CourseLanguage { get; set; } 
+        public string CourseLanguage { get; set; }
         public string SubjectName { get; set; } //Szűrés
         public string SubjectCode { get; set; } //Szűrés
 
