@@ -1,6 +1,7 @@
 ﻿using ExcelDataReader;
 using Project.DbContexts;
 using Project.Entities.CourseStatistics;
+using Project.Entities.SurvivalAnalysis;
 using System.Data;
 
 namespace Project.Services
@@ -8,10 +9,12 @@ namespace Project.Services
     public class ImportService : IImportService
     {
         private readonly CourseStatisticsContext _courseStatisticsContext;
+        private readonly SurvivalAnalysisContext _survivalAnalysisContext;
 
-        public ImportService(CourseStatisticsContext courseStatisticsContext)
+        public ImportService(CourseStatisticsContext courseStatisticsContext, SurvivalAnalysisContext survivalAnalysisContext)
         {
             _courseStatisticsContext = courseStatisticsContext;
+            _survivalAnalysisContext = survivalAnalysisContext;
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
         }
 
@@ -20,13 +23,17 @@ namespace Project.Services
             using (var fileStream = file.OpenReadStream())
             {
                 var data = ReadExcelFile(fileStream);
-                await UploadData(data);
+                await UploadCourseStatisticsData(data);
             }
         }
 
         public async Task ProcessSurvivalAnalysisExcelFile(IFormFile file)
         {
-            throw new NotImplementedException();
+            using (var fileStream = file.OpenReadStream())
+            {
+                var data = ReadExcelFile(fileStream);
+                await UploadSurvivalAnalysisData(data);
+            }
         }
 
         private DataTable ReadExcelFile(Stream fileStream)
@@ -45,7 +52,7 @@ namespace Project.Services
             }
         }
 
-        private async Task UploadData(DataTable data)
+        private async Task UploadCourseStatisticsData(DataTable data)
         {
             var students = new List<Student>();
             var teachers = new List<Teacher>();
@@ -197,6 +204,80 @@ namespace Project.Services
             }
 
             _courseStatisticsContext.SaveChanges();
+        }
+
+        private async Task UploadSurvivalAnalysisData(DataTable data)
+        {
+            var survivalAnalysisItems = new List<SurvivalAnalysisItem>();
+
+            foreach (DataRow row in data.Rows)
+            {
+                string? neptunCode = string.IsNullOrEmpty(row["Neptun kód"].ToString()) ? null : row["Neptun kód"].ToString();
+                string? moduleCode = string.IsNullOrEmpty(row["Modulkód"].ToString()) ? null : row["Modulkód"].ToString();
+                string? admissionSemester = string.IsNullOrEmpty(row["Felvétel féléve"].ToString()) ? null : row["Felvétel féléve"].ToString();
+                string? legalRelationshipEstablishmentReason = string.IsNullOrEmpty(row["Jogviszony létrejöttének oka"].ToString()) ? null : row["Jogviszony létrejöttének oka"].ToString();
+                DateTime? legalRelationshipStartDate = string.IsNullOrEmpty(row["Képzés jogviszony kezdete"].ToString()) ? null : DateTime.Parse(row["Képzés jogviszony kezdete"].ToString());
+                string? statusId = string.IsNullOrEmpty(row["Státusz ID"].ToString()) ? null : row["Státusz ID"].ToString();
+                DateTime? legalRelationshipEndDate = string.IsNullOrEmpty(row["Képzés jogviszony vége"].ToString()) ? null : DateTime.Parse(row["Képzés jogviszony vége"].ToString());
+                string? legalRelationshipTerminationReason = string.IsNullOrEmpty(row["Jogviszony megszűnés oka"].ToString()) ? null : row["Jogviszony megszűnés oka"].ToString();
+                string? semester = string.IsNullOrEmpty(row["Félév"].ToString()) ? null : row["Félév"].ToString();
+                string? subjectCode = string.IsNullOrEmpty(row["Tárgykód"].ToString()) ? null : row["Tárgykód"].ToString();
+                string? subjectName = string.IsNullOrEmpty(row["Tárgynév"].ToString()) ? null : row["Tárgynév"].ToString();
+                bool? completed = string.IsNullOrEmpty(row["Teljesített"].ToString()) ? null : row["Teljesített"].ToString() == "Igaz";
+                string? enrollmentType = string.IsNullOrEmpty(row["Felvétel típusa"].ToString()) ? null : row["Felvétel típusa"].ToString();
+                int? enrollmentCredit = string.IsNullOrEmpty(row["Tárgyfelvételkori kredit"].ToString()) ? null : Int32.Parse(row["Tárgyfelvételkori kredit"].ToString());
+                int? subjectTakenCount = string.IsNullOrEmpty(row["Tárgyfelvétel hányszor"].ToString()) ? null : Int32.Parse(row["Tárgyfelvétel hányszor"].ToString());
+                string? prerequisites = string.IsNullOrEmpty(row["Tárgykövetelmény"].ToString()) ? null : row["Tárgykövetelmény"].ToString();
+                bool? recognized = string.IsNullOrEmpty(row["Elismert"].ToString()) ? null : row["Elismert"].ToString() == "Igaz";
+                string? entryValue = string.IsNullOrEmpty(row["Bejegyzés értéke"].ToString()) ? null : row["Bejegyzés értéke"].ToString();
+                string? entryType = string.IsNullOrEmpty(row["Bejegyzés típusa"].ToString()) ? null : row["Bejegyzés típusa"].ToString();
+                bool? valid = string.IsNullOrEmpty(row["Érvényes"].ToString()) ? null : row["Érvényes"].ToString() == "Igaz";
+                string? program = string.IsNullOrEmpty(row["Tagozat"].ToString()) ? null : row["Tagozat"].ToString();
+                DateTime? diplomaObtainingDate = string.IsNullOrEmpty(row["Diploma megszerzés dátuma"].ToString()) ? null : DateTime.Parse(row["Diploma megszerzés dátuma"].ToString());
+                int? admissionScoreTotal = string.IsNullOrEmpty(row["Felvételi összes pontszám"].ToString()) ? null : Int32.Parse(row["Felvételi összes pontszám"].ToString());
+                string? admissionFinancialStatus = string.IsNullOrEmpty(row["Felvételkori pénzügyi státusz"].ToString()) ? null : row["Felvételkori pénzügyi státusz"].ToString();
+                DateTime? languageExamFulfillmentDate = string.IsNullOrEmpty(row["Nyelvvizsga követelmény teljesülésének dátuma"].ToString()) ? null : DateTime.Parse(row["Nyelvvizsga követelmény teljesülésének dátuma"].ToString());
+
+                var survivalAnalysisItem = new SurvivalAnalysisItem()
+                {
+                    NeptunCode = neptunCode,
+                    ModuleCode = moduleCode,
+                    AdmissionSemester = admissionSemester,
+                    LegalRelationshipEstablishmentReason = legalRelationshipEstablishmentReason,
+                    LegalRelationshipStartDate = legalRelationshipStartDate,
+                    StatusId = statusId,
+                    LegalRelationshipEndDate = legalRelationshipEndDate,
+                    LegalRelationshipTerminationReason = legalRelationshipTerminationReason,
+                    Semester = semester,
+                    SubjectCode = subjectCode,
+                    SubjectName = subjectName,
+                    Completed = completed,
+                    EnrollmentType = enrollmentType,
+                    EnrollmentCredit = enrollmentCredit,
+                    SubjectTakenCount = subjectTakenCount,
+                    Prerequisites = prerequisites,
+                    Recognized = recognized,
+                    EntryValue = entryValue,
+                    EntryType = entryType,
+                    Valid = valid,
+                    Program = program,
+                    DiplomaObtainingDate = diplomaObtainingDate,
+                    AdmissionScoreTotal = admissionScoreTotal,
+                    AdmissionFinancialStatus = admissionFinancialStatus,
+                    LanguageExamFulfillmentDate = languageExamFulfillmentDate
+                };
+
+                survivalAnalysisItems.Add(survivalAnalysisItem);
+            }
+
+            _survivalAnalysisContext.SurvivalAnalysisItems.RemoveRange(_survivalAnalysisContext.SurvivalAnalysisItems);
+
+            foreach (var item in survivalAnalysisItems)
+            {
+                _survivalAnalysisContext.Add(item);
+            }
+
+            _survivalAnalysisContext.SaveChanges();
         }
     }
 }

@@ -72,12 +72,19 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddScoped<IImportService, ImportService>();
 builder.Services.AddScoped<ICourseStatisticsService, CourseStatisticsService>();
+builder.Services.AddScoped<ISurvivalAnalysisService, SurvivalAnalysisService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddDbContext<CourseStatisticsContext>(optionsBuilder =>
 {
     //optionsBuilder.UseSqlServer("Server=(local);Database=Test;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true");
-    optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
+    optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("CourseStatistics"));
+});
+
+builder.Services.AddDbContext<SurvivalAnalysisContext>(optionsBuilder =>
+{
+    //optionsBuilder.UseSqlServer("Server=(local);Database=Test;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true");
+    optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("SurvivalAnalysis"));
 });
 
 var app = builder.Build();
