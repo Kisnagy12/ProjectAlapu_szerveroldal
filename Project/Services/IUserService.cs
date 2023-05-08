@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Project.Entities;
 
 namespace Project.Services
 {
@@ -6,5 +7,6 @@ namespace Project.Services
     {
         Task<IActionResult> AddUserToRole(string userId, string roleName);
         Task<List<string>> GetUserRolesAsync(string userId);
+        Task<ApplicationUser> GetUserById(string userId);
     }
 }

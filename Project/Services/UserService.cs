@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Project.DbContexts;
 using Project.Entities;
+using Project.Migrations;
 
 namespace Project.Services
 {
@@ -40,6 +41,13 @@ namespace Project.Services
             }
 
             return roles;
+        }
+
+        public async Task<ApplicationUser> GetUserById(string userId)
+        {
+            var user= await _courseStatisticsContext.ApplicationUser.Where(x => x.Id == userId).FirstOrDefaultAsync();
+
+            return user;
         }
     }
 }

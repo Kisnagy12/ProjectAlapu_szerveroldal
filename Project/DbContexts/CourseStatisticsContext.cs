@@ -76,7 +76,13 @@ namespace Project.DbContexts
                 .HasKey(x => x.Id);
 
             modelBuilder.Entity<IdentityRole>()
+                .HasData(new IdentityRole { Id = "7caaa9c2-068c-4a42-8f96-79dac866f7f4", ConcurrencyStamp = "73d1a299-4540-4296-8a9b-debc0f3b6ffe", Name = "user", NormalizedName = "USER" });
+            modelBuilder.Entity<IdentityRole>()
+                .HasData(new IdentityRole { Id = "8ff2a9f2-5738-4097-80a3-6e364161263d", ConcurrencyStamp = "415009c2-61df-4c07-830b-804af8ec5f2e", Name = "admin", NormalizedName = "ADMIN" });
+            modelBuilder.Entity<IdentityRole>()
                 .HasKey(x => x.Id);
+
+                
 
             modelBuilder.Entity<IdentityUserRole>()
                 .HasKey(x => x.Id);

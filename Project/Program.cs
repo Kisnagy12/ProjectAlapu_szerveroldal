@@ -27,12 +27,18 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
 }).AddEntityFrameworkStores<CourseStatisticsContext>();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+builder.Services.AddAuthentication(opt =>
+{
+    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
         ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
         ValidAudience = builder.Configuration["JWT:ValidAudience"],
         ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
@@ -47,7 +53,7 @@ builder.Services.AddSwaggerGen(c =>
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
     {
         Name = "Authorization",
-        Type = SecuritySchemeType.Http,
+        Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
@@ -63,9 +69,12 @@ builder.Services.AddSwaggerGen(c =>
                     {
                         Type = ReferenceType.SecurityScheme,
                         Id = "Bearer"
-                    }
+                    },
+                    Scheme="oauth2",
+                    Name="Bearer",
+                    In= ParameterLocation.Header,
                 },
-                new string[] {}
+                new List<string>()
             }
         });
 });
@@ -78,13 +87,15 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddDbContext<CourseStatisticsContext>(optionsBuilder =>
 {
     //optionsBuilder.UseSqlServer("Server=(local);Database=Test;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true");
-    optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("CourseStatistics"));
+    //optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("CourseStatistics"));
+    optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
 });
 
 builder.Services.AddDbContext<SurvivalAnalysisContext>(optionsBuilder =>
 {
     //optionsBuilder.UseSqlServer("Server=(local);Database=Test;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true");
-    optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("SurvivalAnalysis"));
+    //optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("SurvivalAnalysis"));
+    optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
 });
 
 var app = builder.Build();

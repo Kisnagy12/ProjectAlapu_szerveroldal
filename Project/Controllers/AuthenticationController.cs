@@ -57,6 +57,7 @@ namespace Project.Controllers
             {
                 UserName = userForRegistration.Username,
                 Email = userForRegistration.Email,
+                NormalizedUserName=userForRegistration.Username.Normalize(),
             };
             var result = await _userManager.CreateAsync(user, userForRegistration.Password);
 
@@ -67,9 +68,9 @@ namespace Project.Controllers
 
         [HttpPost]
         [EnableCors]
-        public async Task<IActionResult> AddUserToAdminRole(string username)
+        public async Task<IActionResult> AddUserToAdminRole(string userId)
         {
-            var user = await _userManager.FindByNameAsync(username);
+            var user = await _userService.GetUserById(userId);
 
             if (user != null)
             {
@@ -81,6 +82,7 @@ namespace Project.Controllers
 
         }
 
+        [Authorize]
         [HttpGet]
         [EnableCors]
         public async Task<IActionResult> GetAllUsers()
@@ -98,7 +100,7 @@ namespace Project.Controllers
                 }
                 foreach (var user in users)
                 {
-                    var userRoles = await _userManager.GetRolesAsync(user);
+                    var userRoles = await _userService.GetUserRolesAsync(user.Id);
                     if (userRoles != null)
                     {
                         userList.Add(new UserViewModel
@@ -155,6 +157,7 @@ namespace Project.Controllers
 
                 user.RefreshToken = refreshToken;
                 user.RefreshTokenExpiryTime = DateTime.Now.AddDays(refreshTokenValidityInDays);
+                await _userManager.UpdateAsync(user);
 
                 return Ok(new
                 {
