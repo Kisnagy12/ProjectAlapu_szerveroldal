@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using Project.DataTransferObjects;
 using Project.DbContexts;
+using Project.Entities.SurvivalAnalysis;
 
 namespace Project.Services
 {
@@ -86,6 +87,27 @@ namespace Project.Services
                             Credit = g.Sum(x => x.Credit),
                             WeightedGradePointAverage = g.Sum(x => x.Credit * 1.0 * x.Grade) / g.Sum(x => x.Credit)
                         };
+            }
+
+            var result = await query.ToListAsync();
+
+            return result;
+        }
+
+        public async Task<IEnumerable<SurvivalPrediction>> GetSurvivalAnalysisPrediction(List<string?> neptunCodes)
+        {
+            IQueryable<SurvivalPrediction> query;
+
+
+            if (neptunCodes.IsNullOrEmpty())
+            {
+                query = from s in _survivalAnalysisContext.SurvivalPrediction
+                        select s;
+            } else
+            {
+                query = from s in _survivalAnalysisContext.SurvivalPrediction
+                        where neptunCodes.Contains(s.NeptunCode)
+                        select s;
             }
 
             var result = await query.ToListAsync();
