@@ -203,7 +203,7 @@ namespace Project.Services
                 _courseStatisticsContext.Add(teacherOnCourse);
             }
 
-            _courseStatisticsContext.SaveChanges();
+            await _courseStatisticsContext.SaveChangesAsync();
         }
 
         private async Task UploadSurvivalAnalysisData(DataTable data)
@@ -277,7 +277,7 @@ namespace Project.Services
                 _survivalAnalysisContext.Add(item);
             }
 
-            _survivalAnalysisContext.SaveChanges();
+            await _survivalAnalysisContext.SaveChangesAsync();
         }
     }
 }

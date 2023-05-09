@@ -6,6 +6,7 @@ namespace Project.DbContexts
     public class SurvivalAnalysisContext : DbContext
     {
         public DbSet<SurvivalAnalysisItem> SurvivalAnalysisItems { get; set; }
+        public DbSet<SurvivalPrediction> SurvivalPrediction { get; set; }
 
         public SurvivalAnalysisContext(DbContextOptions<SurvivalAnalysisContext> options) : base(options)
         {

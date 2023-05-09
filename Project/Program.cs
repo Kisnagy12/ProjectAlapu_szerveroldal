@@ -88,14 +88,14 @@ builder.Services.AddDbContext<CourseStatisticsContext>(optionsBuilder =>
 {
     //optionsBuilder.UseSqlServer("Server=(local);Database=Test;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true");
     //optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("CourseStatistics"));
-    optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
+    optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("CourseStatistics"));
 });
 
 builder.Services.AddDbContext<SurvivalAnalysisContext>(optionsBuilder =>
 {
     //optionsBuilder.UseSqlServer("Server=(local);Database=Test;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true");
     //optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("SurvivalAnalysis"));
-    optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
+    optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("SurvivalAnalysis"));
 });
 
 var app = builder.Build();

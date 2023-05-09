@@ -21,5 +21,12 @@ namespace Project.Controllers
             var result = await _survivalAnalysisService.GetSurvivalAnalysisStatistics(filter.NeptunCodes);
             return Ok(result);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> GetSurvivalAnalysisPrediction(SurvivalAnalysisFilterDto filter)
+        {
+            var result = await _survivalAnalysisService.GetSurvivalAnalysisPrediction(filter.NeptunCodes);
+            return Ok(result);
+        }
     }
 }
