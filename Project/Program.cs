@@ -123,8 +123,11 @@ app.MapControllers();
 
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<CourseStatisticsContext>();
-    db.Database.Migrate();
+    var courseStatisticsDb = scope.ServiceProvider.GetRequiredService<CourseStatisticsContext>();
+    courseStatisticsDb.Database.Migrate();
+    
+    var survivalAnalysisDb = scope.ServiceProvider.GetRequiredService<SurvivalAnalysisContext>();
+    survivalAnalysisDb.Database.Migrate();
 }
 
 
