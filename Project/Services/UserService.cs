@@ -2,42 +2,41 @@
 using Microsoft.EntityFrameworkCore;
 using Project.DbContexts;
 using Project.Entities;
-using Project.Migrations;
 
 namespace Project.Services
 {
     public class UserService : IUserService
     {
-        private readonly CourseStatisticsContext _courseStatisticsContext;
+        private readonly SurvivalAnalysisContext _survivalAnalysisContext;
 
-        public UserService(CourseStatisticsContext courseStatisticsContext)
+        public UserService(SurvivalAnalysisContext survivalAnalysisContext)
         {
-            _courseStatisticsContext = courseStatisticsContext;
+            _survivalAnalysisContext = survivalAnalysisContext;
         }
         public async Task<IActionResult> AddUserToRole(string userId, string roleName)
         {
-            var role = _courseStatisticsContext.IdentityRole.Where(x => x.NormalizedName == roleName).FirstOrDefault();
+            var role = _survivalAnalysisContext.IdentityRole.Where(x => x.NormalizedName == roleName).FirstOrDefault();
             var newUserRole = new IdentityUserRole
             {
                 Id = Guid.NewGuid().ToString(),
                 UserId = userId,
                 RoleId = role.Id
             };
-            _courseStatisticsContext.Add(newUserRole);
-            await _courseStatisticsContext.SaveChangesAsync();
+            _survivalAnalysisContext.Add(newUserRole);
+            await _survivalAnalysisContext.SaveChangesAsync();
 
             return new JsonResult(newUserRole);
         }
 
         public async Task<List<string>> GetUserRolesAsync(string userId)
         {
-            var userRoles = await _courseStatisticsContext.IdentityUserRole.Where(x => x.UserId == userId).ToListAsync();
+            var userRoles = await _survivalAnalysisContext.IdentityUserRole.Where(x => x.UserId == userId).ToListAsync();
 
             var roles = new List<string>();
 
             foreach (var userRole in userRoles)
             {
-                roles.Add(_courseStatisticsContext.IdentityRole.Where(x => x.Id == userRole.RoleId).FirstOrDefault().NormalizedName);
+                roles.Add(_survivalAnalysisContext.IdentityRole.Where(x => x.Id == userRole.RoleId).FirstOrDefault().NormalizedName);
             }
 
             return roles;
@@ -45,7 +44,7 @@ namespace Project.Services
 
         public async Task<ApplicationUser> GetUserById(string userId)
         {
-            var user= await _courseStatisticsContext.ApplicationUser.Where(x => x.Id == userId).FirstOrDefaultAsync();
+            var user= await _survivalAnalysisContext.ApplicationUser.Where(x => x.Id == userId).FirstOrDefaultAsync();
 
             return user;
         }

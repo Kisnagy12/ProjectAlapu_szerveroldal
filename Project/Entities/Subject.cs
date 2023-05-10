@@ -1,4 +1,4 @@
-﻿namespace Project.Entities.CourseStatistics
+﻿namespace Project.Entities
 {
     public class Subject : AbstractEntity
     {

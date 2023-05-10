@@ -11,9 +11,9 @@ using Project.DbContexts;
 
 namespace Project.Migrations
 {
-    [DbContext(typeof(CourseStatisticsContext))]
-    [Migration("20230328163240_applicationUser")]
-    partial class applicationUser
+    [DbContext(typeof(SurvivalAnalysisContext))]
+    [Migration("20230510194039_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,41 @@ namespace Project.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IdentityRole");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "7caaa9c2-068c-4a42-8f96-79dac866f7f4",
+                            ConcurrencyStamp = "73d1a299-4540-4296-8a9b-debc0f3b6ffe",
+                            Name = "user",
+                            NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = "8ff2a9f2-5738-4097-80a3-6e364161263d",
+                            ConcurrencyStamp = "415009c2-61df-4c07-830b-804af8ec5f2e",
+                            Name = "admin",
+                            NormalizedName = "ADMIN"
+                        });
+                });
 
             modelBuilder.Entity("Project.Entities.ApplicationUser", b =>
                 {
@@ -63,6 +98,12 @@ namespace Project.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -77,7 +118,7 @@ namespace Project.Migrations
                     b.ToTable("ApplicationUser");
                 });
 
-            modelBuilder.Entity("Project.Entities.CourseStatistics.Course", b =>
+            modelBuilder.Entity("Project.Entities.Course", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -119,7 +160,23 @@ namespace Project.Migrations
                     b.ToTable("Courses");
                 });
 
-            modelBuilder.Entity("Project.Entities.CourseStatistics.Student", b =>
+            modelBuilder.Entity("Project.Entities.IdentityUserRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IdentityUserRole");
+                });
+
+            modelBuilder.Entity("Project.Entities.Student", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -139,7 +196,7 @@ namespace Project.Migrations
                     b.ToTable("Students");
                 });
 
-            modelBuilder.Entity("Project.Entities.CourseStatistics.StudentOnCourse", b =>
+            modelBuilder.Entity("Project.Entities.StudentOnCourse", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -172,7 +229,7 @@ namespace Project.Migrations
                     b.ToTable("StudentsOnCourses");
                 });
 
-            modelBuilder.Entity("Project.Entities.CourseStatistics.Subject", b =>
+            modelBuilder.Entity("Project.Entities.Subject", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -196,7 +253,147 @@ namespace Project.Migrations
                     b.ToTable("Subjects");
                 });
 
-            modelBuilder.Entity("Project.Entities.CourseStatistics.Teacher", b =>
+            modelBuilder.Entity("Project.Entities.SurvivalAnalysisItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AdmissionFinancialStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("AdmissionScoreTotal")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AdmissionSemester")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Completed")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("DiplomaObtainingDate")
+                        .HasColumnType("date");
+
+                    b.Property<int?>("EnrollmentCredit")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EnrollmentType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EntryType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EntryValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LanguageExamFulfillmentDate")
+                        .HasColumnType("date");
+
+                    b.Property<DateTime?>("LegalRelationshipEndDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("LegalRelationshipEstablishmentReason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LegalRelationshipStartDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("LegalRelationshipTerminationReason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModuleCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NeptunCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Prerequisites")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Program")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Recognized")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Semester")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StatusId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubjectCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubjectName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SubjectTakenCount")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("Valid")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SurvivalAnalysisItems");
+                });
+
+            modelBuilder.Entity("Project.Entities.SurvivalPrediction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("NeptunCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float?>("Semester_1")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("Semester_10")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("Semester_11")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("Semester_2")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("Semester_3")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("Semester_4")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("Semester_5")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("Semester_6")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("Semester_7")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("Semester_8")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("Semester_9")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("risk_score")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SurvivalPrediction");
+                });
+
+            modelBuilder.Entity("Project.Entities.Teacher", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -216,7 +413,7 @@ namespace Project.Migrations
                     b.ToTable("Teachers");
                 });
 
-            modelBuilder.Entity("Project.Entities.CourseStatistics.TeacherOnCourse", b =>
+            modelBuilder.Entity("Project.Entities.TeacherOnCourse", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -243,9 +440,9 @@ namespace Project.Migrations
                     b.ToTable("TeachersOnCourses");
                 });
 
-            modelBuilder.Entity("Project.Entities.CourseStatistics.Course", b =>
+            modelBuilder.Entity("Project.Entities.Course", b =>
                 {
-                    b.HasOne("Project.Entities.CourseStatistics.Subject", "Subject")
+                    b.HasOne("Project.Entities.Subject", "Subject")
                         .WithMany("Courses")
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -254,15 +451,15 @@ namespace Project.Migrations
                     b.Navigation("Subject");
                 });
 
-            modelBuilder.Entity("Project.Entities.CourseStatistics.StudentOnCourse", b =>
+            modelBuilder.Entity("Project.Entities.StudentOnCourse", b =>
                 {
-                    b.HasOne("Project.Entities.CourseStatistics.Course", "Course")
+                    b.HasOne("Project.Entities.Course", "Course")
                         .WithMany("StudentOnCourses")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Project.Entities.CourseStatistics.Student", "Student")
+                    b.HasOne("Project.Entities.Student", "Student")
                         .WithMany("StudentOnCourses")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -273,15 +470,15 @@ namespace Project.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("Project.Entities.CourseStatistics.TeacherOnCourse", b =>
+            modelBuilder.Entity("Project.Entities.TeacherOnCourse", b =>
                 {
-                    b.HasOne("Project.Entities.CourseStatistics.Course", "Course")
+                    b.HasOne("Project.Entities.Course", "Course")
                         .WithMany("TeacherOnCourses")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Project.Entities.CourseStatistics.Teacher", "Teacher")
+                    b.HasOne("Project.Entities.Teacher", "Teacher")
                         .WithMany("TeacherOnCourses")
                         .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -292,24 +489,24 @@ namespace Project.Migrations
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("Project.Entities.CourseStatistics.Course", b =>
+            modelBuilder.Entity("Project.Entities.Course", b =>
                 {
                     b.Navigation("StudentOnCourses");
 
                     b.Navigation("TeacherOnCourses");
                 });
 
-            modelBuilder.Entity("Project.Entities.CourseStatistics.Student", b =>
+            modelBuilder.Entity("Project.Entities.Student", b =>
                 {
                     b.Navigation("StudentOnCourses");
                 });
 
-            modelBuilder.Entity("Project.Entities.CourseStatistics.Subject", b =>
+            modelBuilder.Entity("Project.Entities.Subject", b =>
                 {
                     b.Navigation("Courses");
                 });
 
-            modelBuilder.Entity("Project.Entities.CourseStatistics.Teacher", b =>
+            modelBuilder.Entity("Project.Entities.Teacher", b =>
                 {
                     b.Navigation("TeacherOnCourses");
                 });

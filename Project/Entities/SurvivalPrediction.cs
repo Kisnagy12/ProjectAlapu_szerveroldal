@@ -1,4 +1,4 @@
-﻿namespace Project.Entities.SurvivalAnalysis
+﻿namespace Project.Entities
 {
     public class SurvivalPrediction : AbstractEntity
     {

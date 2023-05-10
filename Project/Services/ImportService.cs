@@ -1,19 +1,16 @@
 ﻿using ExcelDataReader;
 using Project.DbContexts;
-using Project.Entities.CourseStatistics;
-using Project.Entities.SurvivalAnalysis;
+using Project.Entities;
 using System.Data;
 
 namespace Project.Services
 {
     public class ImportService : IImportService
     {
-        private readonly CourseStatisticsContext _courseStatisticsContext;
         private readonly SurvivalAnalysisContext _survivalAnalysisContext;
 
-        public ImportService(CourseStatisticsContext courseStatisticsContext, SurvivalAnalysisContext survivalAnalysisContext)
+        public ImportService(SurvivalAnalysisContext survivalAnalysisContext)
         {
-            _courseStatisticsContext = courseStatisticsContext;
             _survivalAnalysisContext = survivalAnalysisContext;
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
         }
@@ -166,44 +163,44 @@ namespace Project.Services
                 }
             }
 
-            _courseStatisticsContext.TeachersOnCourses.RemoveRange(_courseStatisticsContext.TeachersOnCourses);
-            _courseStatisticsContext.StudentsOnCourses.RemoveRange(_courseStatisticsContext.StudentsOnCourses);
-            _courseStatisticsContext.Courses.RemoveRange(_courseStatisticsContext.Courses);
-            _courseStatisticsContext.Subjects.RemoveRange(_courseStatisticsContext.Subjects);
-            _courseStatisticsContext.Teachers.RemoveRange(_courseStatisticsContext.Teachers);
-            _courseStatisticsContext.Students.RemoveRange(_courseStatisticsContext.Students);
+            _survivalAnalysisContext.TeachersOnCourses.RemoveRange(_survivalAnalysisContext.TeachersOnCourses);
+            _survivalAnalysisContext.StudentsOnCourses.RemoveRange(_survivalAnalysisContext.StudentsOnCourses);
+            _survivalAnalysisContext.Courses.RemoveRange(_survivalAnalysisContext.Courses);
+            _survivalAnalysisContext.Subjects.RemoveRange(_survivalAnalysisContext.Subjects);
+            _survivalAnalysisContext.Teachers.RemoveRange(_survivalAnalysisContext.Teachers);
+            _survivalAnalysisContext.Students.RemoveRange(_survivalAnalysisContext.Students);
 
             foreach (var student in students)
             {
-                _courseStatisticsContext.Add(student);
+                _survivalAnalysisContext.Add(student);
             }
 
             foreach (var teacher in teachers)
             {
-                _courseStatisticsContext.Add(teacher);
+                _survivalAnalysisContext.Add(teacher);
             }
 
             foreach (var subject in subjects)
             {
-                _courseStatisticsContext.Add(subject);
+                _survivalAnalysisContext.Add(subject);
             }
 
             foreach (var course in courses)
             {
-                _courseStatisticsContext.Add(course);
+                _survivalAnalysisContext.Add(course);
             }
 
             foreach (var studentOnCourse in studentOnCourses)
             {
-                _courseStatisticsContext.Add(studentOnCourse);
+                _survivalAnalysisContext.Add(studentOnCourse);
             }
 
             foreach (var teacherOnCourse in teacherOnCourses)
             {
-                _courseStatisticsContext.Add(teacherOnCourse);
+                _survivalAnalysisContext.Add(teacherOnCourse);
             }
 
-            await _courseStatisticsContext.SaveChangesAsync();
+            await _survivalAnalysisContext.SaveChangesAsync();
         }
 
         private async Task UploadSurvivalAnalysisData(DataTable data)

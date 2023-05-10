@@ -25,7 +25,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
-}).AddEntityFrameworkStores<CourseStatisticsContext>();
+}).AddEntityFrameworkStores<SurvivalAnalysisContext>();
 
 builder.Services.AddAuthentication(opt =>
 {
@@ -80,22 +80,14 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddScoped<IImportService, ImportService>();
-builder.Services.AddScoped<ICourseStatisticsService, CourseStatisticsService>();
 builder.Services.AddScoped<ISurvivalAnalysisService, SurvivalAnalysisService>();
 builder.Services.AddScoped<IUserService, UserService>();
-
-builder.Services.AddDbContext<CourseStatisticsContext>(optionsBuilder =>
-{
-    //optionsBuilder.UseSqlServer("Server=(local);Database=Test;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true");
-    //optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("CourseStatistics"));
-    optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("CourseStatistics"));
-});
 
 builder.Services.AddDbContext<SurvivalAnalysisContext>(optionsBuilder =>
 {
     //optionsBuilder.UseSqlServer("Server=(local);Database=Test;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true");
-    //optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("SurvivalAnalysis"));
     optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("SurvivalAnalysis"));
+    //optionsBuilder.UseSqlServer(@"Server=proj-soft-dev-p\\SQLEXPRESS;Database=SurvivalAnalysis;User Id=dotnet;Password=SurvivalAnalysis2023;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true");
 });
 
 var app = builder.Build();
@@ -123,12 +115,8 @@ app.MapControllers();
 
 using (var scope = app.Services.CreateScope())
 {
-    var courseStatisticsDb = scope.ServiceProvider.GetRequiredService<CourseStatisticsContext>();
-    courseStatisticsDb.Database.Migrate();
-    
     var survivalAnalysisDb = scope.ServiceProvider.GetRequiredService<SurvivalAnalysisContext>();
     survivalAnalysisDb.Database.Migrate();
 }
-
 
 app.Run();

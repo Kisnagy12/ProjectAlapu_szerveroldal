@@ -1,4 +1,4 @@
-﻿namespace Project.Entities
+﻿namespace Project.DataTransferObjects
 {
     public class UserRegistrationDTO
     {
