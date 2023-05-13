@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Project.DbContexts;
 
@@ -11,9 +12,11 @@ using Project.DbContexts;
 namespace Project.Migrations
 {
     [DbContext(typeof(SurvivalAnalysisContext))]
-    partial class SurvivalAnalysisContextModelSnapshot : ModelSnapshot
+    [Migration("20230513171908_DefaultAdminSeed")]
+    partial class DefaultAdminSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

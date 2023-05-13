@@ -37,18 +37,6 @@ namespace Project.Controllers
             _signInManager = signInManager;
             _configuration = configuration;
             _userService = userService;
-
-            if(!_userManager.Users.Any(u => u.UserName == "admin")) {
-                var admin = new ApplicationUser
-                {
-                    UserName = "admin",
-                    Email = "",
-                    NormalizedUserName = "ADMIN",
-                };
-                _userManager.CreateAsync(admin, "Admin_123");
-
-                _userService.AddUserToRole(admin.Id, Roles.ADMIN);
-            }
         }
 
         /// <summary>
