@@ -11,6 +11,7 @@ using System.Text;
 var AllowedOrigins = "_allowedOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
+ConfigurationManager configuration = builder.Configuration;
 
 builder.Services.AddCors(options =>
 {
@@ -37,11 +38,11 @@ builder.Services.AddAuthentication(opt =>
     {
         ValidateIssuer = true,
         ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidAudience = builder.Configuration["JWT:ValidAudience"],
-        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+        //ValidateLifetime = true,
+        //ValidateIssuerSigningKey = true,
+        ValidAudience = configuration["JWT:ValidAudience"],
+        ValidIssuer = configuration["JWT:ValidIssuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
     };
 }); ;
 
@@ -50,10 +51,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "ProjektAPI", Version = "v1" });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
     {
         Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
+        Type = SecuritySchemeType.Http,
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
@@ -70,9 +72,9 @@ builder.Services.AddSwaggerGen(c =>
                         Type = ReferenceType.SecurityScheme,
                         Id = "Bearer"
                     },
-                    Scheme="oauth2",
-                    Name="Bearer",
-                    In= ParameterLocation.Header,
+                    //Scheme="oauth2",
+                    //Name="Bearer",
+                    //In= ParameterLocation.Header,
                 },
                 new List<string>()
             }
