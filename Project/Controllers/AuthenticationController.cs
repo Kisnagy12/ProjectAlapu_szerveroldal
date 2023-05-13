@@ -106,6 +106,7 @@ namespace Project.Controllers
                     {
                         userList.Add(new UserViewModel
                         {
+                            UserId=user.Id,
                             UserName = user.UserName,
                             Email = user.Email,
                             UserRoles = userRoles,
@@ -115,6 +116,7 @@ namespace Project.Controllers
                     {
                         userList.Add(new UserViewModel
                         {
+                            UserId = user.Id,
                             UserName = user.UserName,
                             Email = user.Email,
                         });
@@ -220,16 +222,18 @@ namespace Project.Controllers
         public async Task<IActionResult> GetPrincipalByToken(string? token)
         {
             var principal = GetPrincipalFromExpiredToken(token);
+            var userRoles=new List<string>();
             var user = new ApplicationUser();
             if (principal != null)
             {
                 user = await _userManager.FindByNameAsync(principal.Identity!.Name);
+                userRoles = await _userService.GetUserRolesAsync(user.Id);
             }
             else
             {
                 return BadRequest();
             }
-            return new JsonResult(user);
+            return new JsonResult(new{ user, userRoles});
         }
 
         [Authorize]

@@ -88,7 +88,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddDbContext<SurvivalAnalysisContext>(optionsBuilder =>
 {
     //optionsBuilder.UseSqlServer("Server=(local);Database=Test;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true");
-    optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
+    optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("SurvivalAnalysis"));
     //optionsBuilder.UseSqlServer(@"Server=proj-soft-dev-p\\SQLEXPRESS;Database=SurvivalAnalysis;User Id=dotnet;Password=SurvivalAnalysis2023;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true");
 });
 
