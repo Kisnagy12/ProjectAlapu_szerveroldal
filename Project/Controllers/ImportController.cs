@@ -49,7 +49,20 @@ namespace Project.Controllers
                 await _importService.ProcessSurvivalAnalysisExcelFile(file);
 
                 string scriptPath = "C:\\survival_analysis_ml_component\\main.py";
-                await _importService.RunPythonScriptAsync(scriptPath);
+                //await _importService.RunPythonScriptAsync(scriptPath);
+
+                string fileName = "C:\\survival_analysis_ml_component\\main.py";
+                string arguments = ""; // opcionális argumentumok
+                string workingDirectory = "C:\\survival_analysis_ml_component\\";
+
+                Process process = new Process();
+                process.StartInfo.FileName = fileName;
+                process.StartInfo.Arguments = arguments;
+                process.StartInfo.WorkingDirectory = workingDirectory;
+                process.StartInfo.UseShellExecute = false;
+
+                process.Start();
+                process.WaitForExit();
                 transaction.Commit();
             }
             catch (Exception ex)
@@ -61,25 +74,14 @@ namespace Project.Controllers
 
             return new JsonResult(new { message = "A fájl feldolgozása és az analízis futása sikeresen megtörtént!" });
 
-            string fileName = "C:\\survival_analysis_ml_component\\main.py";
-            string arguments = ""; // opcionális argumentumok
-            string workingDirectory = "C:\\survival_analysis_ml_component\\";
+            
 
-            Process process = new Process();
-            process.StartInfo.FileName = fileName;
-            process.StartInfo.Arguments = arguments;
-            process.StartInfo.WorkingDirectory = workingDirectory;
-            process.StartInfo.UseShellExecute = false;
-
-            process.Start();
-            process.WaitForExit();
-
-            if (process.ExitCode != 0)
+            /*if (process.ExitCode != 0)
             {
                 return BadRequest();
             }
 
-            return Ok();
+            return Ok();*/
         }
 
         private bool IsValidExcelFile(IFormFile file)

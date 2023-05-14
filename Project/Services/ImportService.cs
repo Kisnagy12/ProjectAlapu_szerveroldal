@@ -40,6 +40,7 @@ namespace Project.Services
 
         public Task RunPythonScriptAsync(string path)
         {
+            
             ScriptScope scope = _scriptEngine.CreateScope();
             _scriptEngine.ExecuteFile(path, scope);
             return Task.CompletedTask;
