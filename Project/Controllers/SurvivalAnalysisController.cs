@@ -30,6 +30,20 @@ namespace Project.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> GetSurvivalAnalysisPredictionAsc(SurvivalAnalysisFilterDto filter)
+        {
+            var result = await _survivalAnalysisService.GetSurvivalAnalysisPredictionAsc(filter.NeptunCodes);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetSurvivalAnalysisPredictionDesc(SurvivalAnalysisFilterDto filter)
+        {
+            var result = await _survivalAnalysisService.GetSurvivalAnalysisPredictionDesc(filter.NeptunCodes);
+            return Ok(result);
+        }
+
+        [HttpPost]
         public async Task<IActionResult> GetCourseStatistics(CourseStatisticsFilterDto filter)
         {
             var result = await _survivalAnalysisService.GetCourseStatistics(filter.SemesterNames, filter.SubjectCodes, filter.SubjectNames, filter.TeacherNames);

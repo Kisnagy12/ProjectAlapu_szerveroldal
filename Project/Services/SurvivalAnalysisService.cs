@@ -115,6 +115,54 @@ namespace Project.Services
             return result;
         }
 
+        public async Task<IEnumerable<SurvivalPrediction>> GetSurvivalAnalysisPredictionAsc(List<string?> neptunCodes)
+        {
+            IQueryable<SurvivalPrediction> query;
+
+
+            if (neptunCodes.IsNullOrEmpty())
+            {
+                query = from s in _survivalAnalysisContext.SurvivalPrediction
+                        orderby s.risk_score ascending
+                        select s;
+            }
+            else
+            {
+                query = from s in _survivalAnalysisContext.SurvivalPrediction
+                        where neptunCodes.Contains(s.NeptunCode)
+                        orderby s.risk_score ascending
+                        select s;
+            }
+
+            var result = await query.ToListAsync();
+
+            return result;
+        }
+
+        public async Task<IEnumerable<SurvivalPrediction>> GetSurvivalAnalysisPredictionDesc(List<string?> neptunCodes)
+        {
+            IQueryable<SurvivalPrediction> query;
+
+
+            if (neptunCodes.IsNullOrEmpty())
+            {
+                query = from s in _survivalAnalysisContext.SurvivalPrediction
+                        orderby s.risk_score descending
+                        select s;
+            }
+            else
+            {
+                query = from s in _survivalAnalysisContext.SurvivalPrediction
+                        where neptunCodes.Contains(s.NeptunCode)
+                        orderby s.risk_score descending
+                        select s;
+            }
+
+            var result = await query.ToListAsync();
+
+            return result;
+        }
+
         public async Task<IEnumerable<CourseStatisticsDto>> GetCourseStatistics(
             List<string> semesterNames,
             List<string> subjectCodes,
