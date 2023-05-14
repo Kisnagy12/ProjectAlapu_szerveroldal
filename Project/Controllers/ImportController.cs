@@ -40,6 +40,24 @@ namespace Project.Controllers
 
             await _importService.ProcessSurvivalAnalysisExcelFile(file);
 
+            string fileName = "C:\\survival_analysis_ml_component\\main.py";
+            string arguments = ""; // opcionális argumentumok
+            string workingDirectory = "C:\\survival_analysis_ml_component\\";
+
+            Process process = new Process();
+            process.StartInfo.FileName = fileName;
+            process.StartInfo.Arguments = arguments;
+            process.StartInfo.WorkingDirectory = workingDirectory;
+            process.StartInfo.UseShellExecute = false;
+
+            process.Start();
+            process.WaitForExit();
+
+            if (process.ExitCode != 0)
+            {
+                return BadRequest();
+            }
+
             return Ok();
         }
 
