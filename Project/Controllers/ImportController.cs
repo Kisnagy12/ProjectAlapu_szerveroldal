@@ -49,9 +49,9 @@ namespace Project.Controllers
                 await _importService.ProcessSurvivalAnalysisExcelFile(file);
 
                 string scriptPath = "C:\\survival_analysis_ml_component\\main.py";
-                //await _importService.RunPythonScriptAsync(scriptPath);
+                await _importService.RunPythonScriptAsync(scriptPath);
 
-                string fileName = "C:\\survival_analysis_ml_component\\main.py";
+                /*string fileName = "C:\\survival_analysis_ml_component\\main.py";
                 string arguments = ""; // opcionális argumentumok
                 string workingDirectory = "C:\\survival_analysis_ml_component\\";
 
@@ -62,7 +62,7 @@ namespace Project.Controllers
                 process.StartInfo.UseShellExecute = false;
 
                 process.Start();
-                process.WaitForExit();
+                process.WaitForExit();*/
                 transaction.Commit();
             }
             catch (Exception ex)

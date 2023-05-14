@@ -40,9 +40,11 @@ namespace Project.Services
 
         public Task RunPythonScriptAsync(string path)
         {
-            
+            _scriptEngine.SetSearchPaths(new[] { @"C:\ProgramData\anaconda3\Lib", @"C:\ProgramData\anaconda3\Lib\site-packages" });
+            //ScriptSource source = _scriptEngine.CreateScriptSourceFromFile(path);
             ScriptScope scope = _scriptEngine.CreateScope();
             _scriptEngine.ExecuteFile(path, scope);
+            //source.Execute(scope);
             return Task.CompletedTask;
         }
 
