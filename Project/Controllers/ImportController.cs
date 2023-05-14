@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Project.DbContexts;
 using Project.Services;
+using System.Diagnostics;
 
 namespace Project.Controllers
 {
@@ -9,10 +11,12 @@ namespace Project.Controllers
     public class ImportController : Controller
     {
         private readonly IImportService _importService;
+        private readonly SurvivalAnalysisContext _survivalAnalysisContext;
 
-        public ImportController(IImportService importService)
+        public ImportController(IImportService importService, SurvivalAnalysisContext survivalAnalysisContext)
         {
             _importService = importService;
+            _survivalAnalysisContext = survivalAnalysisContext;
         }
 
         [HttpPost]
@@ -33,12 +37,29 @@ namespace Project.Controllers
         [EnableCors]
         public async Task<IActionResult> ImportSurvivalAnalysisExcelFile(IFormFile file)
         {
-            if (!IsValidExcelFile(file))
+            using var transaction = _survivalAnalysisContext.Database.BeginTransaction();
+            try
             {
-                return BadRequest("Not valid excel file.");
+                await _importService.TruncateSurvivalPrediction();
+                if (!IsValidExcelFile(file))
+                {
+                    return BadRequest("Not valid excel file.");
+                }
+
+                await _importService.ProcessSurvivalAnalysisExcelFile(file);
+
+                string scriptPath = "C:\\survival_analysis_ml_component\\main.py";
+                await _importService.RunPythonScriptAsync(scriptPath);
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                return new JsonResult(new { message = "Hiba a SurvivalAnalysis futása során!", exceptionMessage = ex.Message });
+                throw;
             }
 
-            await _importService.ProcessSurvivalAnalysisExcelFile(file);
+            return new JsonResult(new { message = "A fájl feldolgozása és az analízis futása sikeresen megtörtént!" });
 
             string fileName = "C:\\survival_analysis_ml_component\\main.py";
             string arguments = ""; // opcionális argumentumok

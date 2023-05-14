@@ -1,4 +1,7 @@
 ﻿using ExcelDataReader;
+using IronPython.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Scripting.Hosting;
 using Project.DbContexts;
 using Project.Entities;
 using System.Data;
@@ -8,11 +11,13 @@ namespace Project.Services
     public class ImportService : IImportService
     {
         private readonly SurvivalAnalysisContext _survivalAnalysisContext;
+        private readonly ScriptEngine _scriptEngine;
 
         public ImportService(SurvivalAnalysisContext survivalAnalysisContext)
         {
             _survivalAnalysisContext = survivalAnalysisContext;
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            _scriptEngine = Python.CreateEngine();
         }
 
         public async Task ProcessCourseStatisticsExcelFile(IFormFile file)
@@ -31,6 +36,18 @@ namespace Project.Services
                 var data = ReadExcelFile(fileStream);
                 await UploadSurvivalAnalysisData(data);
             }
+        }
+
+        public Task RunPythonScriptAsync(string path)
+        {
+            ScriptScope scope = _scriptEngine.CreateScope();
+            _scriptEngine.ExecuteFile(path, scope);
+            return Task.CompletedTask;
+        }
+
+        public async Task TruncateSurvivalPrediction()
+        {
+            await _survivalAnalysisContext.SurvivalPrediction.ExecuteDeleteAsync();
         }
 
         private DataTable ReadExcelFile(Stream fileStream)
