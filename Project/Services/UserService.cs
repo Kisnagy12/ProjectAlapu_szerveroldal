@@ -28,6 +28,16 @@ namespace Project.Services
             return new JsonResult(newUserRole);
         }
 
+        public async Task<IActionResult> RemoveAdminRole(string userId, string roleName)
+        {
+            var role = _survivalAnalysisContext.IdentityRole.Where(x => x.NormalizedName == roleName).FirstOrDefault();
+            var userRole=_survivalAnalysisContext.IdentityUserRole.Where(x => x.UserId == userId && x.RoleId==role.Id).FirstOrDefault();
+            _survivalAnalysisContext.Entry(userRole).State = EntityState.Deleted;
+            await _survivalAnalysisContext.SaveChangesAsync();
+
+            return new JsonResult(userRole);
+        }
+
         public async Task<List<string>> GetUserRolesAsync(string userId)
         {
             var userRoles = await _survivalAnalysisContext.IdentityUserRole.Where(x => x.UserId == userId).ToListAsync();

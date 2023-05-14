@@ -76,7 +76,33 @@ namespace Project.Controllers
             if (user != null)
             {
                 await _userService.AddUserToRole(user.Id, Roles.ADMIN);
-                return Ok(new JsonResult(user));
+                return Ok(new JsonResult(new UserViewModel
+                {
+                    Email = user.Email,
+                    UserName = user.UserName,
+                    UserId = user.Id,
+                }));
+            }
+
+            return BadRequest("User not found");
+
+        }
+
+        [HttpPost]
+        [EnableCors]
+        public async Task<IActionResult> RemoveUserFromAdmins(string userId)
+        {
+            var user = await _userService.GetUserById(userId);
+
+            if (user != null)
+            {
+                await _userService.RemoveAdminRole(user.Id, Roles.ADMIN);
+                return Ok(new JsonResult(new UserViewModel
+                {
+                    Email = user.Email,
+                    UserName = user.UserName,
+                    UserId = user.Id,
+                }));
             }
 
             return BadRequest("User not found");
