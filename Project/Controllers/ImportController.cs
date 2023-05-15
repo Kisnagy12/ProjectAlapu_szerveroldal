@@ -37,51 +37,38 @@ namespace Project.Controllers
         [EnableCors]
         public async Task<IActionResult> ImportSurvivalAnalysisExcelFile(IFormFile file)
         {
-            using var transaction = _survivalAnalysisContext.Database.BeginTransaction();
-            try
+            if (!IsValidExcelFile(file))
             {
-                await _importService.TruncateSurvivalPrediction();
-                if (!IsValidExcelFile(file))
-                {
-                    return BadRequest("Not valid excel file.");
-                }
-
-                await _importService.ProcessSurvivalAnalysisExcelFile(file);
-
-                string scriptPath = "C:\\survival_analysis_ml_component\\main.py";
-                await _importService.RunPythonScriptAsync(scriptPath);
-
-                /*string fileName = "C:\\survival_analysis_ml_component\\main.py";
-                string arguments = ""; // opcionális argumentumok
-                string workingDirectory = "C:\\survival_analysis_ml_component\\";
-
-                Process process = new Process();
-                process.StartInfo.FileName = fileName;
-                process.StartInfo.Arguments = arguments;
-                process.StartInfo.WorkingDirectory = workingDirectory;
-                process.StartInfo.UseShellExecute = false;
-
-                process.Start();
-                process.WaitForExit();*/
-                transaction.Commit();
-            }
-            catch (Exception ex)
-            {
-                transaction.Rollback();
-                return new JsonResult(new { message = "Hiba a SurvivalAnalysis futása során!", exceptionMessage = ex.Message });
-                throw;
+                return BadRequest("Not valid excel file.");
             }
 
-            return new JsonResult(new { message = "A fájl feldolgozása és az analízis futása sikeresen megtörtént!" });
+            await _importService.TruncateSurvivalPrediction();
+            await _importService.ProcessSurvivalAnalysisExcelFile(file);
 
-            
+            //string scriptPath = "C:\\survival_analysis_ml_component\\main.py";
+            //await _importService.RunPythonScriptAsync(scriptPath);
 
-            /*if (process.ExitCode != 0)
-            {
-                return BadRequest();
-            }
+            Process process = new Process();
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            //startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            startInfo.FileName = "C:\\ProgramData\\anaconda3\\Library\\bin\\conda.bat";
+            startInfo.Arguments = "run -n base python C:\\survival_analysis_ml_component\\main.py";
+            startInfo.RedirectStandardOutput = true;
+            startInfo.RedirectStandardError = true;
+            startInfo.UseShellExecute = false;
+            process.StartInfo = startInfo;
+            process.Start();
 
-            return Ok();*/
+            string result = process.StandardOutput.ReadToEnd();
+            string error = process.StandardError.ReadToEnd();
+
+            Console.WriteLine("ITTVANARESULT" + result);
+            Console.WriteLine("ITTVANAZERROR" + error);
+
+
+            process.WaitForExit();
+
+            return new JsonResult(new { message = result, errorr = error});
         }
 
         private bool IsValidExcelFile(IFormFile file)
@@ -91,6 +78,11 @@ namespace Project.Controllers
                 return false;
             }
             return true;
+        }
+
+        private static void ConsoleLog(object process, DataReceivedEventArgs args)
+        {
+            System.IO.File.AppendAllText("C:\\consolelog.txt", args.Data);
         }
     }
 }
